@@ -1,0 +1,13 @@
+html.investigation-open{overflow:hidden}
+dialog.investigation-modal{position:fixed;inset:0;width:min(1120px,calc(100vw - 40px));max-width:none;max-height:calc(100dvh - 48px);padding:0;margin:auto;border:1px solid #44516a;border-radius:20px;background:var(--panel,#151e2e);color:var(--text,#edf2fa);box-shadow:0 28px 90px #0009;overflow:auto}
+.investigation-modal::backdrop{background:#050b18b8;backdrop-filter:blur(5px)}
+.investigation-modal .investigation-detail{margin:0;border:0;border-radius:0;box-shadow:none;overflow:visible}
+.investigation-modal .investigation-head{position:sticky;top:0;z-index:2;align-items:flex-start;gap:24px;padding:24px 28px}
+.investigation-modal .investigation-head>div{min-width:0}
+.investigation-modal .investigation-head h2{overflow-wrap:anywhere}
+.investigation-close{display:inline-flex;align-items:center;justify-content:center;gap:9px;flex:none;min-height:44px;padding:10px 15px;border:1px solid #59657d;border-radius:10px;background:#263247;color:#eef2fb;font:inherit;font-size:14px;font-weight:600;white-space:nowrap;cursor:pointer}
+.investigation-close svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.investigation-close:hover{background:#38445e;border-color:#ad89de}
+.investigation-close:focus-visible{outline:2px solid #c4a3ef;outline-offset:3px}
+.investigation-modal .code-preview{white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:700px){dialog.investigation-modal{width:calc(100vw - 20px);max-height:calc(100dvh - 20px);border-radius:14px}.investigation-modal .investigation-head{position:static;padding:20px;flex-direction:column-reverse;gap:12px}.investigation-close{align-self:flex-end}.investigation-modal .investigation-head h2{font-size:22px}}

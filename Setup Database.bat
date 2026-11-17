@@ -1,7 +1,8 @@
 @echo off
 setlocal
-title Cybersecurity Database Setup
-echo Cybersecurity Database Setup
+title Cybersecurity Transfer Setup
+echo Cybersecurity Transfer Setup
+echo Copy the entire Cybersecurity folder to C:\xampp\htdocs first.
 echo Start MySQL in the XAMPP Control Panel before continuing.
 echo Existing accounts and records will be preserved.
 echo.
@@ -21,6 +22,14 @@ if errorlevel 1 (
     exit /b 1
 )
 echo.
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0includes\setup-mail-worker.ps1" -PhpPath "%CYBER_PHP%"
+if errorlevel 1 (
+    echo Database setup succeeded, but the automatic email task could not be installed.
+    echo Run this batch file as Administrator to retry the task setup.
+)
+echo.
+echo Gmail Alerts: enter the Google app password for alimaomadelyn@gmail.com.
+echo Enable Automatic notifications and save the connection.
 echo Open http://localhost/Cybersecurity/ after starting Apache.
 pause
 exit /b 0

@@ -12,14 +12,21 @@ try{
  require __DIR__.'/provision-students.php';
  if(!in_array('20261108',$existing,true)){
   $q=$db->prepare('UPDATE student_accounts SET password_hash=?,first_name=?,last_name=?,notification_email=? WHERE student_number=?');
-  $q->execute([password_hash('12345',PASSWORD_DEFAULT),'Jordan','Navarro','joshuamalapote21@gmail.com','20261108']);
+  $q->execute([password_hash('12345',PASSWORD_DEFAULT),'Jordan','Navarro','alimaomadelyn@gmail.com','20261108']);
  }
  $q=$db->prepare('INSERT IGNORE INTO security_admin(id,username,password_hash) VALUES(1,?,?)');$q->execute(['cyber',password_hash('12345',PASSWORD_DEFAULT)]);
  foreach(['security_events','incidents','security_alerts','security_admin','student_accounts','student_requests','student_sessions','account_mail','report_schedule'] as $table)$db->query('SELECT 1 FROM '.$table.' LIMIT 1');
+ $private=dirname(GMAIL_CONFIG);
+ if(!is_dir($private)&&!mkdir($private,0700,true))throw new RuntimeException('Could not create private Gmail configuration folder.');
+ if(!is_file(GMAIL_CONFIG)){
+  $config=['sender'=>'alimaomadelyn@gmail.com','admin'=>'alimaomadelyn@gmail.com','password'=>'','enabled'=>false];
+  if(file_put_contents(GMAIL_CONFIG,json_encode($config),LOCK_EX)===false)throw new RuntimeException('Could not create Gmail configuration.');
+ }
  echo PHP_EOL."Database plmun_cybersecurity is ready.\n";
  echo "New demo accounts use password 12345. Existing passwords were not reset.\n";
  echo "Admin: cyber\nStudents: 20261108, 20261109, 20261110, 20261111, 20261112\n";
- echo "Gmail connection and the Windows mail-worker task must be configured separately on a new computer.\n";
+ echo "New Gmail sender and administrator: alimaomadelyn@gmail.com\n";
+ echo "Existing Gmail settings were preserved. For a fresh setup, enter this sender's Google app password in Gmail Alerts, enable notifications, and save.\n";
 }catch(Throwable $e){
  if($e instanceof PDOException)fwrite(STDERR,"Database setup failed. Ensure XAMPP MySQL is running and CYBER_DB_USER / CYBER_DB_PASSWORD match its credentials. Database error code: ".$e->getCode()."\n");
  else fwrite(STDERR,$e->getMessage()."\n");

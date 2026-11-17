@@ -20,10 +20,10 @@ if ($selected):
     $timelinePage = min(max(1, (int)filter_input(INPUT_GET, 'timeline_page', FILTER_VALIDATE_INT)), $timelinePages);
     $timelineItems = array_slice($timeline, ($timelinePage - 1) * 10, 10);
 ?>
-<article class="panel investigation-detail" id="investigation">
+<link rel="stylesheet" href="assets/investigation-modal.css?v=1"><dialog id="investigation" class="investigation-modal" aria-labelledby="investigation-title"><article class="panel investigation-detail">
   <header class="investigation-head">
-    <div><span class="eyebrow">INCIDENT / INC-<?=h($id)?></span><h2><?=h($selected['title'])?></h2><div class="incident-badges"><span class="severity <?=h($selected['priority'])?>"><?=h(ucfirst($selected['priority']))?> priority</span><span class="state-tag"><?=h(ucfirst($selected['status']))?></span><span>Opened <?=h($selected['created_at'])?> PHT</span></div></div>
-    <a class="button" href="?page=incidents">Close details</a>
+    <div><span class="eyebrow">INCIDENT / INC-<?=h($id)?></span><h2 id="investigation-title"><?=h($selected['title'])?></h2><div class="incident-badges"><span class="severity <?=h($selected['priority'])?>"><?=h(ucfirst($selected['priority']))?> priority</span><span class="state-tag"><?=h(ucfirst($selected['status']))?></span><span>Opened <?=h($selected['created_at'])?> PHT</span></div></div>
+    <button type="button" class="investigation-close" autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg><span>Close details</span></button>
   </header>
   <?php if(isset($_GET['saved'])): ?><div class="notice" role="status">Incident status updated.</div><?php elseif(isset($_GET['unchanged'])): ?><div class="notice" role="status">No status change was needed.</div><?php endif; ?>
   <div class="investigation-body">
@@ -42,5 +42,13 @@ if ($selected):
     </div>
   </footer>
 </article>
-<script>document.getElementById('investigation')?.scrollIntoView({block:'start'});</script>
+</dialog><script>
+(()=>{
+ const dialog=document.getElementById('investigation');
+ document.documentElement.classList.add('investigation-open');dialog.showModal();
+ dialog.querySelector('.investigation-close').addEventListener('click',()=>dialog.close());
+ dialog.addEventListener('click',event=>{const box=dialog.getBoundingClientRect();if(event.target===dialog&&(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom))dialog.close();});
+ dialog.addEventListener('close',()=>{document.documentElement.classList.remove('investigation-open');const url=new URL(location.href);['incident','timeline_page','saved','unchanged'].forEach(key=>url.searchParams.delete(key));url.hash='';history.replaceState(null,'',url);document.querySelector('a[href*="incident=<?=(int)$id?>"]')?.focus();});
+})();
+</script>
 <?php endif; ?>
