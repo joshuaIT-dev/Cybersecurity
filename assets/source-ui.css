@@ -1,0 +1,37 @@
+.source-workspace{display:grid;gap:22px;min-width:0}
+.source-workspace .status-cards{gap:20px;margin:0;align-items:stretch}
+.source-workspace .status-card{padding:26px;border-radius:16px;border-top:3px solid #9062d2;background:linear-gradient(135deg,#1c273b,var(--panel));display:flex;flex-direction:column}
+.source-workspace .status-card .panel-heading{gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.source-workspace .panel-heading h2{font-size:19px;line-height:1.4;margin:0 0 8px}
+.source-workspace .panel-heading p{font-size:13px;line-height:1.7;max-width:750px}
+.source-workspace .status-card .state-tag{background:#54d6a014;border:1px solid #54d6a035;color:#80e1b7;padding:7px 11px;font-size:11px}
+.source-workspace .status-detail{margin-top:auto;padding-top:20px;grid-template-columns:minmax(120px,.7fr) minmax(0,1fr);gap:16px;font-size:14px;line-height:1.5}
+.source-workspace .status-detail b{font-weight:600}
+.source-workspace>.module-panel{padding:26px;margin:0;border-radius:16px;min-width:0}
+.source-workspace .category-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:24px 0}
+.source-workspace .category-tile{padding:22px 18px;gap:12px;align-content:start;min-height:140px;border-radius:12px;border-top:2px solid #8461b8;background:#111b2c}
+.source-workspace .category-tile b{font-size:15px;line-height:1.4;color:#e4d5fb}
+.source-workspace .category-tile span{font-size:13px;line-height:1.7}
+.source-workspace .notice{padding:16px 18px;font-size:13px;line-height:1.7}
+.source-workspace .code-preview{padding:22px;font-size:13px;line-height:1.8;border-radius:12px;max-height:360px;overflow:auto;margin-bottom:0;background:#0c1422}
+.source-workspace .module-toolbar{margin:20px 0;padding:16px;gap:14px;background:#111b2c}
+.source-workspace .module-toolbar label{font-size:13px;gap:8px}
+.source-workspace .module-toolbar select{height:42px;min-width:210px;font-size:14px}
+.source-workspace .module-toolbar .button{height:42px;margin-left:0;padding:0 22px;font-size:13px}
+.source-workspace .request-review{margin:12px 0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#111b2c}
+.source-workspace .request-review>summary{padding:20px;font-size:14px;line-height:1.7;color:var(--text);cursor:pointer}
+.source-workspace .request-review>summary .state-tag{margin-left:14px}
+.source-workspace .request-review[open]>summary{border-bottom:1px solid var(--border);background:#1d293a}
+.source-workspace .request-review .investigation-body{padding:24px;gap:28px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.source-workspace .evidence{grid-template-columns:minmax(100px,.7fr) minmax(0,1fr);gap:12px 18px}
+.source-workspace .evidence :is(dt,dd){font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.source-workspace .request-review-form{display:grid;gap:18px;align-content:start}
+.source-workspace .request-review-form label{display:grid;gap:8px;font-size:13px;color:var(--muted)}
+.source-workspace .request-review-form :is(select,textarea){width:100%;padding:12px;border:1px solid #394964;border-radius:9px;background:#0d1625;color:var(--text);font:inherit;line-height:1.6}
+.source-workspace .request-review-form textarea{resize:vertical;min-height:120px}
+.source-workspace .request-review-form .button{min-height:44px;height:auto;justify-self:start;font-size:13px;padding:10px 18px;white-space:normal}
+.source-workspace .record-pager{margin:24px 0 0;padding-top:20px;border-top:1px solid var(--border)}
+.source-workspace :is(input,select,textarea):focus-visible{outline:2px solid #b58ae9;outline-offset:2px}
+@media(max-width:1200px){.source-workspace .category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.source-workspace .status-cards{grid-template-columns:1fr}.source-workspace .request-review .investigation-body{grid-template-columns:1fr}}
+@media(max-width:600px){.source-workspace .status-card,.source-workspace>.module-panel{padding:20px}.source-workspace .category-grid{grid-template-columns:1fr}.source-workspace .category-tile{min-height:0}.source-workspace .status-detail{grid-template-columns:1fr;gap:6px}.source-workspace .status-detail b{margin-bottom:12px}.source-workspace .module-toolbar select{min-width:0;width:100%}}

@@ -1,0 +1,45 @@
+# Current email policy
+
+Student email addresses are fixed school records. The portal displays them read-only and rejects email-change and verification requests. Incident and password notices use the saved address directly, without email_verified_at. Earlier verification-flow notes below describe superseded behavior. Pending verification emails are cancelled by the worker. Students without an assigned email receive no email; incident alerts still go to the administrator.
+
+# Current local deployment
+
+After importing the database schemas, run `C:\xampp\php\php.exe includes\provision-students.php` from the project folder. This adds identity/email columns and four demo students without overwriting existing accounts. Jordan remains 20261108; John Erick Hernandez is 20261109; Jay Sogaso is 20261110; Sofia Reyes is 20261111; Adrian Cruz is 20261112. Initial demo passwords are 12345. Change these before public deployment.
+
+Student login uses the account database. Identity, QR downloads, requests, photos, password changes, and security activity use the signed-in student. Academic records remain shared demonstration content. Students save their own notification email in Student Portal > Profile > Contact Info. Gmail Alerts configures only the sender and administrator; incident routing reads the affected student account directly. Missing or unverified student email means admin-only incident delivery; unknown account identifiers also notify only the admin. John Erick and Jay have the supplied Gmail addresses; Sofia and Adrian start without email. Jordan retains the existing test address.
+
+Account verification passed all five HTTP logins. Deliberate Jordan-only failed-login, denied-access, and access-volume events created INC-14 through INC-16. All six corresponding admin/student deliveries were recorded sent by SMTP. Inbox receipt was not independently checked. No verification emails were sent to the new student addresses.
+
+Report scheduling also requires database/report-schedules.sql. The existing Gmail worker processes daily or Monday weekly email summaries and records delivery/retries in report_runs. Settings and the latest ten runs appear in Reports & Analytics. The current schedule is daily at 08:00 Philippine time. A missed schedule produces one catch-up summary and advances to the next future run, rather than sending a backlog. Summaries are email text; CSV/DOCX remain on-demand downloads.
+
+Notifications use security_alerts.status: recorded means unread and read means acknowledged. Mark all as read acknowledges only alerts up to the highest ID shown when the page loaded, so newly arriving alerts are preserved. Incident status is independent.
+
+Import schema.sql, monitoring.sql, student.sql, gmail.sql, and hardening.sql when preparing a new database. Existing installations were migrated in place.
+
+Gmail delivery runs through the Windows task CyberWatch Gmail Delivery every minute. It can run on battery and starts missed runs when available. It still requires the configured Windows user to be logged in, MySQL to run, and internet connectivity. System Health displays its measured heartbeat, latest collection error, and oldest queued delivery.
+
+Routine signed-out GET requests redirect to login without creating threat incidents. Signed-in student requests to the admin dashboard and unauthenticated protected POST requests are denied and recorded. Detection and incident deduplication use account and IP. New password changes increment the account session version and invalidate older sessions.
+
+Student requests are validated server side against the demo course catalog. Sources & Collection contains administrator request review. Decisions and responses are saved and shown in My Requests / My Consultations. They are local school workflow records, not integration with official university systems.
+
+Tests generated a clearly labelled system-verification consultation, subsequently completed by the administrator. Password-revocation testing restored the requested student demo password without printing password hashes. Existing sessions were invalidated and must sign in again.
+
+
+Monitoring update: eleven application rules now cover student login failures (5/10 minutes per account+IP), admin failures (5/5 minutes per IP), unfamiliar successful sign-ins (new IP/browser signature after an earlier success), denied access, repeated anonymous login-required requests (10/minute per IP), CSRF failures (5/10 minutes per account+IP), suspicious route signatures, and rapid page views (30/minute). Anonymous protected student API POST requests now generate denied-access events. Route inspection checks page/action/export values only, never passwords or free-text concerns, and rejects matched values with HTTP 400. The first successful login establishes the sign-in baseline. Browser signatures are user-agent strings, not device identity. Changed browsers or networks can cause legitimate alerts.
+
+Student notification email changes require the current password plus session CSRF protection. Mailbox ownership is now checked through the confirmation-code flow described below. Threat exports include all incident rules. Run `C:\xampp\php\php.exe includes\detection-check.php` for isolated temporary-table detection checks; these do not enqueue real mail. No after-hours rule is enabled without an agreed school access schedule. This application does not scan malware, inspect network traffic, or act as a general web application firewall.
+
+
+## Account security deployment (five selected features)
+
+Apply `database/account-security.sql` after the existing schema and student provisioning migrations. It is additive and repeatable. This deployment has already applied it. Existing student email values are retained but not marked verified. Existing student sessions must sign in again to register a revocable session. No passwords are reset.
+
+1. Password changes enqueue a notice to the current verified address in the same transaction as the password update. Other registered sessions are revoked, the account session version increments, and any pending email change is cancelled. The current session remains usable.
+2. Profile > Contact Info requests a six-digit email confirmation code after checking the current password. The student enters the code in the portal; no publicly reachable callback URL is required on localhost. Codes last 15 minutes, allow five attempts, and are single-use. Resends are limited to one per minute and five per hour per account. The old verified email remains active until confirmation. Both a request notice and a completed-change notice go to the old verified address; the new address gets confirmation. A password-confirmed Cancel action is available. Five wrong current-password confirmations impose a 15-minute limit. Unverified addresses never receive incident or password notices.
+3. AUTH-04 detects a successful student login after at least five failed attempts against the account during the preceding ten minutes, counting only failures since its previous successful login. The normal one-minute login cooldown still applies.
+4. AUTH-05 flags a login when another unrevoked, unexpired session with a different IP/browser signature was active within fifteen minutes. Profile > Security lists sessions with last activity, identifies the current session, and permits password-confirmed revocation of another session. Sessions expire after twelve hours. This is a review signal, not proof that two different people are using the account.
+5. BEHAVIOR-02 flags ten protected PDF/DOCX downloads per student in five minutes, across IPs. The existing enrollment report PDF and student QR DOCX use `student-portal/download.php`. QR images also require the account session but viewing the image does not count as a download. Apache denies direct access to these sensitive static assets; preserve `student-portal/assets/.htaccess` and AllowOverride authorization support. Blank graduation forms remain public, and no official grade-download file exists yet.
+
+The existing minute-based Gmail worker processes `account_mail` as well as incident and scheduled-report mail. It records retries (three attempts), expiry, and delivery status. Confirmation code bodies are erased after sending/cancellation/expiry. The dashboard delivery table combines both mail queues at ten items per page; System Health includes their pending messages. SMTP delivery is not an atomic transaction with MySQL: a process crash after SMTP acceptance but before the database commit may cause a duplicate on retry.
+
+Run `C:\xampp\php\php.exe includes\account-security-check.php` for isolated temporary-table tests, including confirmation expiry/replay/attempt limits, notices, session ownership/revocation, worker retries, and all new detection rules. Tests intercept SMTP and never send messages. Live HTTP checks additionally verified session revocation, protected download routes, direct-file denial, and the dashboard pages. Browser automation was unavailable for visual UI verification.

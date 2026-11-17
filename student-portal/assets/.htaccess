@@ -1,0 +1,3 @@
+<FilesMatch "^(Enrolled-Subjects-Test-Report\.pdf|student-qr.*\.(docx|png))$">
+ Require all denied
+</FilesMatch>

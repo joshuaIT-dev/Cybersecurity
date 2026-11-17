@@ -1,0 +1,26 @@
+/* Bottom accents identify summaries; detailed work surfaces stay flat. */
+.app-shell .main-area .workspace :is(.panel,.metric-card){background:var(--panel);box-shadow:none}
+.app-shell .main-area .workspace :is(.metric-card,.incident-stats>article,.report-kpis>article,.health-measures>article,.status-cards>.status-card,.service-grid>.service-card,.detection-grid>.detection-card){
+ --card-accent:var(--purple);
+ border:1px solid var(--border);
+ box-shadow:inset 0 -3px 0 var(--card-accent);
+}
+.app-shell .main-area .workspace .metric-accent{display:none}
+.app-shell .main-area .workspace .metric-card:has(.metric-icon.blue){--card-accent:var(--blue)}
+.app-shell .main-area .workspace .metric-card:has(.metric-icon.rose){--card-accent:var(--rose)}
+.app-shell .main-area .workspace .metric-card:has(.metric-icon.amber){--card-accent:var(--amber)}
+.app-shell .main-area .workspace .module-summary>.metric-card:first-child{--card-accent:var(--blue)}
+.app-shell .main-area .workspace .incident-stats>article:nth-child(1){--card-accent:var(--amber)}
+.app-shell .main-area .workspace .incident-stats>article:nth-child(2){--card-accent:var(--rose)}
+.app-shell .main-area .workspace .incident-stats>article:nth-child(3){--card-accent:var(--blue)}
+.app-shell .main-area .workspace .incident-stats>article:nth-child(4){--card-accent:var(--green)}
+.app-shell .main-area .workspace .report-kpis>article:nth-child(1){--card-accent:var(--purple)}
+.app-shell .main-area .workspace .report-kpis>article:nth-child(2){--card-accent:var(--amber)}
+.app-shell .main-area .workspace .report-kpis>article:nth-child(3){--card-accent:var(--green)}
+.app-shell .main-area .workspace .report-kpis>article:nth-child(4){--card-accent:var(--blue)}
+.app-shell .main-area .workspace .health-measures>article{--card-accent:var(--blue)}
+.app-shell .main-area .workspace .status-cards>.status-card{--card-accent:var(--blue)}
+.app-shell .main-area .workspace .service-grid>.service-card{--card-accent:var(--blue)}
+.app-shell .main-area .workspace .detection-grid>.detection-card{--card-accent:var(--purple)}
+.app-shell .main-area .workspace :is(.collection-hero,.mode-banner,.category-tile,.investigation-head,.investigation-actions){background:var(--panel);box-shadow:none}
+.app-shell .main-area .workspace :is(.collection-hero,.mode-banner,.category-tile){border:1px solid var(--border)}
